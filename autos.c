@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <string.h>
 
 typedef struct {
     char marca[30];
@@ -13,79 +12,117 @@ typedef struct {
 
 void agregarAuto(Auto autos[], int *numAutos) {
     if (*numAutos >= 100) {
-        printf("No se pueden agregar más autos. Capacidad máxima alcanzada.\n");
+        printf("No se pueden agregar mas autos.\n");
         return;
     }
 
+    fflush(stdin);
+
     Auto nuevoAuto;
 
-    while (getchar() != '\n' && !feof(stdin));
-
-    printf("Ingrese la marca del auto: ");
+    printf("Ingrese la marca: ");
     scanf("%29s", nuevoAuto.marca);
 
-    printf("Ingrese el modelo del auto: ");
+    printf("Ingrese el modelo: ");
     scanf("%29s", nuevoAuto.modelo);
 
-    printf("Ingrese el tipo de auto (C, S, D): ");
+    printf("Ingrese el tipo (C, S, D): ");
     scanf(" %c", &nuevoAuto.tipo);
 
-    printf("Ingrese el año del auto: ");
-    scanf("%d", &nuevoAuto.año);
+    do {
+        printf("Ingrese el año (mayor a 1885): ");
+        scanf("%d", &nuevoAuto.año);
+        if (nuevoAuto.año <= 1885) {
+            printf("Error: Año invalido. Ingrese un año posterior a 1885.\n");
+        }
+    } while (nuevoAuto.año <= 1885);
 
-    printf("Ingrese el precio del auto: ");
-    scanf("%f", &nuevoAuto.precio);
+    do {
+        printf("Ingrese el precio (mayor a 0): ");
+        scanf("%f", &nuevoAuto.precio);
+        if (nuevoAuto.precio <= 0) {
+            printf("Error: El precio debe ser mayor a 0.\n");
+        }
+    } while (nuevoAuto.precio <= 0);
 
     int disponible;
-    printf("¿Está disponible? (1 para sí, 0 para no): ");
-    scanf("%d", &disponible);
+    int i = 0;
+    while(i < 10){
+        printf("Esta disponible? (1 = Si, 0 = No): ");
+        scanf("%d", &disponible);
+        if(disponible == 1 || disponible == 0){
+            i = 10;
+        } else {
+            printf("Ingrese un valor valido.\n");
+        }
+    }
 
     nuevoAuto.disponible = (disponible == 1);
 
     FILE *archivo = fopen("datos.txt", "a");
 
     if (archivo == NULL) {
-        printf("Error al abrir el archivo para escribir.\n");
+        printf("Error al abrir el archivo.\n");
         return;
-    } else {
-        fprintf(archivo, "%s %s %c %d %.2f %d\n",
-                nuevoAuto.marca,
-                nuevoAuto.modelo,
-                nuevoAuto.tipo,
-                nuevoAuto.año,
-                nuevoAuto.precio,
-                nuevoAuto.disponible);
-
-        fclose(archivo);
     }
+
+    fprintf(archivo, "%s %s %c %d %.2f %d\n",
+            nuevoAuto.marca,
+            nuevoAuto.modelo,
+            nuevoAuto.tipo,
+            nuevoAuto.año,
+            nuevoAuto.precio,
+            nuevoAuto.disponible);
+
+    fclose(archivo);
+
     autos[*numAutos] = nuevoAuto;
     (*numAutos)++;
 
     printf("Auto agregado correctamente.\n");
 }
 
-void menu () {
-    int opcion=1
-    int i==1;
-    while (i==1) {
-        printf("=== Menú de Autos ===\n");
-        printf("1. Agregar auto\n");
-        printf("2. Salir\n");
-scanf("%d", &opcion);
-switch (opcion) {
-    case 1:
+int menu() {
+    int opcion;
+    printf("\nMENUUU\n");
+    printf("1. Agregar auto\n");
+    printf("2. Listar todos los autos\n");
+    printf("3. Listar autos segun una condicion\n");
+    printf("4. Buscar un auto\n");
+    printf("5. Separar autos segun disponibilidad\n");
+    printf("6. Salir\n");
+    printf("Ingrese una opcion: ");
 
-        break;
-    case 2:
-        printf("Saliendo del programa.\n");
-        break;
-    default:
-        printf("Opción inválida. Intente nuevamente.\n");
-        break;
-    }
+    scanf("%d", &opcion);
+    return opcion;
 }
 
-int main(){
+int main() {
+    Auto autos[100];
+    int numAutos = 0;
+    int opcion;
+    
+    do {
+        opcion = menu();
+        switch (opcion) {
+            case 1:
+                agregarAuto(autos, &numAutos);
+                break;
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                printf("Esta opcion todavia no esta programada.\n");
+                break;
+            case 6:
+                printf("Saliendo del programa.\n");
+                break;
 
-return 0;
+            default:
+                printf("Opcion incorrecta.\n");
+        }
+
+    } while (opcion != 6);
+
+    return 0;
 }
