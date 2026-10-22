@@ -82,6 +82,46 @@ void agregarAuto(Auto autos[], int *numAutos) {
     printf("Auto agregado correctamente.\n");
 }
 
+void listarAutos() {
+    FILE *archivo = fopen("datos.txt", "r");
+
+    if (archivo == NULL) {
+        printf("No se pudo abrir datos.txt.\n");
+        return;
+    }
+
+    Auto autoLeido;
+    int cantidad = 0;
+    int disponible;
+
+    while (fscanf(archivo, "%29s %29s %c %d %f %d",
+                  autoLeido.marca,
+                  autoLeido.modelo,
+                  &autoLeido.tipo,
+                  &autoLeido.año,
+                  &autoLeido.precio,
+                  &disponible) == 6) {
+
+        autoLeido.disponible = (disponible == 1);
+
+        printf("\nMarca: %s\n", autoLeido.marca);
+        printf("Modelo: %s\n", autoLeido.modelo);
+        printf("Tipo: %c\n", autoLeido.tipo);
+        printf("Año: %d\n", autoLeido.año);
+        printf("Precio: %.2f\n", autoLeido.precio);
+        printf("Disponible: %s\n",
+               autoLeido.disponible ? "Si" : "No");
+
+        cantidad++;
+    }
+
+    if (cantidad == 0) {
+        printf("No hay autos registrados.\n");
+    }
+
+    fclose(archivo);
+}
+
 int menu() {
     int opcion;
     printf("\nMENUUU\n");
@@ -109,6 +149,8 @@ int main() {
                 agregarAuto(autos, &numAutos);
                 break;
             case 2:
+                listarAutos();
+                break;
             case 3:
             case 4:
             case 5:
