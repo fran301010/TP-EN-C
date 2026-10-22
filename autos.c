@@ -154,8 +154,6 @@ int main() {
             case 3:
             case 4:
             case 5:
-                printf("Esta opcion todavia no esta programada.\n");
-                break;
             case 6:
                 printf("Saliendo del programa.\n");
                 break;
