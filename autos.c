@@ -102,15 +102,23 @@ void listarAutos() {
                   &autoLeido.precio,
                   &disponible) == 6) {
 
-        autoLeido.disponible = (disponible == 1);
+        if (disponible == 1) {
+            autoLeido.disponible = true;
+        } else {
+            autoLeido.disponible = false;
+        }
 
         printf("\nMarca: %s\n", autoLeido.marca);
         printf("Modelo: %s\n", autoLeido.modelo);
         printf("Tipo: %c\n", autoLeido.tipo);
         printf("Año: %d\n", autoLeido.año);
         printf("Precio: %.2f\n", autoLeido.precio);
-        printf("Disponible: %s\n",
-               autoLeido.disponible ? "Si" : "No");
+        
+        if (autoLeido.disponible) {
+            printf("Disponible: Si\n");
+        } else {
+            printf("Disponible: No\n");
+        }
 
         cantidad++;
     }
@@ -121,7 +129,6 @@ void listarAutos() {
 
     fclose(archivo);
 }
-
 int menu() {
     int opcion;
     printf("\nMENUUU\n");
