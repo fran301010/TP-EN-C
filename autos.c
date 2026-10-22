@@ -63,3 +63,29 @@ void agregarAuto(Auto autos[], int *numAutos) {
 
     printf("Auto agregado correctamente.\n");
 }
+
+void menu () {
+    int opcion=1
+    int i==1;
+    while (i==1) {
+        printf("=== Menú de Autos ===\n");
+        printf("1. Agregar auto\n");
+        printf("2. Salir\n");
+scanf("%d", &opcion);
+switch (opcion) {
+    case 1:
+
+        break;
+    case 2:
+        printf("Saliendo del programa.\n");
+        break;
+    default:
+        printf("Opción inválida. Intente nuevamente.\n");
+        break;
+    }
+}
+
+int main(){
+
+return 0;
+}
