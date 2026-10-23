@@ -10,11 +10,71 @@ typedef struct {
     float precio;
     bool disponible;
 } Auto;
+int cargarautos(Auto autos[]) {
+    FILE *archivo = fopen("datos.txt", "r");
+    int numAutos = 0;
+    int disponible;
+    Auto autoLeido;
 
-void agregarAuto(Auto autos[], int *numAutos) {
-    if (*numAutos >= 100) {
+    if (archivo == NULL) {
+        printf("No existe datos.txt o no se pudo abrir.\n");
+        return 0;
+    }
+
+    while (numAutos < 100 &&
+           fscanf(archivo, "%29s %29s %c %d %f %d",
+                  autoLeido.marca,
+                  autoLeido.modelo,
+                  &autoLeido.tipo,
+                  &autoLeido.ano,
+                  &autoLeido.precio,
+                  &disponible) == 6) {
+
+        if (autoLeido.tipo == 'C' ||
+            autoLeido.tipo == 'S' ||
+            autoLeido.tipo == 'D') {
+
+            if (autoLeido.ano > 1885) {
+
+                if (autoLeido.precio > 0 &&
+                    autoLeido.precio <= 135000000) {
+
+                    if (disponible == 0 || disponible == 1) {
+                        autoLeido.disponible = (disponible == 1);
+                        autos[numAutos] = autoLeido;
+                        numAutos++;
+                    } else {
+                        printf("Error: disponibilidad invalida en datos.txt.\n");
+                    }
+
+                } else {
+                    printf("Error: precio invalido en datos.txt.\n");
+                }
+
+            } else {
+                printf("Error: año invalido en datos.txt.\n");
+            }
+
+        } else {
+            printf("Error: tipo invalido en datos.txt.\n");
+        }
+    }
+
+    fclose(archivo);
+
+    if (numAutos == 100) {
+        printf("Se alcanzo el limite de 100 autos.\n");
+    }
+
+    printf("Se cargaron %d autos validos desde datos.txt.\n", numAutos);
+
+    return numAutos;
+}
+
+int agregarauto(Auto autos[], int numAutos) {
+    if (numAutos >= 100) {
         printf("No se pueden agregar mas autos.\n");
-        return;
+        return numAutos;
     }
 
     fflush(stdin);
@@ -27,36 +87,72 @@ void agregarAuto(Auto autos[], int *numAutos) {
     printf("Ingrese el modelo: ");
     scanf("%29s", nuevoAuto.modelo);
 
-    printf("Ingrese el tipo (C, S, D): ");
-    scanf(" %c", &nuevoAuto.tipo);
+    do {
+        printf("\n-TIPOS DE AUTO -\n");
+        printf("C - Coupe: generalmente tiene dos puertas y un diseño deportivo.\n");
+        printf("S - Sedan: suele tener cuatro puertas y un baul separado.\n");
+        printf("D - Deportivo: prioriza el rendimiento y las prestaciones.\n");
+        printf("Ingrese el tipo de auto (C, S o D): ");
+
+        scanf(" %c", &nuevoAuto.tipo);
+
+        if (nuevoAuto.tipo != 'C' &&
+            nuevoAuto.tipo != 'S' &&
+            nuevoAuto.tipo != 'D') {
+            printf("Error: tipo invalido. Ingrese C, S o D.\n");
+        }
+
+    } while (nuevoAuto.tipo != 'C' &&
+             nuevoAuto.tipo != 'S' &&
+             nuevoAuto.tipo != 'D');
+
+    int resultado;
 
     do {
-        printf("Ingrese el ano (mayor a 1885): ");
-        scanf("%d", &nuevoAuto.ano);
-        if (nuevoAuto.ano <= 1885) {
-            printf("Error: Ano invalido. Ingrese un ano posterior a 1885.\n");
-        }
-    } while (nuevoAuto.ano <= 1885);
+        printf("Ingrese el año (mayor a 1885): ");
+        resultado = scanf("%d", &nuevoAuto.ano);
+
+        if (resultado != 1) {
+            printf("Error: debe ingresar un numero entero.\n");
+            fflush(stdin);
+            nuevoAuto.ano = 0;
+        }  else if (nuevoAuto.ano <= 1885 || nuevoAuto.ano > 2026) {
+    printf("Error: año invalido. Ingrese un año entre 1886 y 2026.\n");
+}
+
+    } while (nuevoAuto.ano <= 1885 || nuevoAuto.ano > 2026);
 
     do {
-        printf("Ingrese el precio (mayor a 0): ");
-        scanf("%f", &nuevoAuto.precio);
-        if (nuevoAuto.precio <= 0) {
-            printf("Error: El precio debe ser mayor a 0.\n");
+        printf("Ingrese el precio (mayor a 0 y hasta 135000000): ");
+        resultado = scanf("%f", &nuevoAuto.precio);
+
+        if (resultado != 1) {
+            printf("Error: debe ingresar un numero.\n");
+            fflush(stdin);
+            nuevoAuto.precio = 0;
+        } else if (nuevoAuto.precio <= 0 ||
+                   nuevoAuto.precio > 135000000) {
+            printf("Error: precio invalido.\n");
         }
-    } while (nuevoAuto.precio <= 0);
+
+    } while (nuevoAuto.precio <= 0 ||
+             nuevoAuto.precio > 135000000);
 
     int disponible;
-    int i = 0;
-    while(i < 10){
+
+    do {
         printf("Esta disponible? (1 = Si, 0 = No): ");
-        scanf("%d", &disponible);
-        if(disponible == 1 || disponible == 0){
-            i = 10;
-        } else {
-            printf("Ingrese un valor valido.\n");
+        resultado = scanf("%d", &disponible);
+
+        if (resultado != 1) {
+            printf("Error: debe ingresar 1 o 0.\n");
+            fflush(stdin);
+            disponible = -1;
+        } else if (disponible != 1 && disponible != 0) {
+            printf("Error: ingrese 1 para Si o 0 para No.\n");
         }
-    }
+
+    } while (disponible != 1 && disponible != 0);
 
     nuevoAuto.disponible = (disponible == 1);
 
@@ -64,7 +160,7 @@ void agregarAuto(Auto autos[], int *numAutos) {
 
     if (archivo == NULL) {
         printf("Error al abrir el archivo.\n");
-        return;
+        return numAutos;
     }
 
     fprintf(archivo, "%s %s %c %d %.2f %d\n",
@@ -77,11 +173,15 @@ void agregarAuto(Auto autos[], int *numAutos) {
 
     fclose(archivo);
 
-    autos[*numAutos] = nuevoAuto;
-    (*numAutos)++;
+    autos[numAutos] = nuevoAuto;
+    numAutos++;
 
     printf("Auto agregado correctamente.\n");
+
+    return numAutos;
 }
+
+
 
 void listarAutos() {
     FILE *archivo = fopen("datos.txt", "r");
@@ -366,30 +466,44 @@ int menu() {
 
 int main() {
     Auto autos[100];
-    int numAutos = 0;
-    int opcion; 
+    int numAutos;
+    int opcion;
+
+    numAutos = cargarautos(autos);
+
     do {
         opcion = menu();
+
         switch (opcion) {
             case 1:
-                agregarAuto(autos, &numAutos);
+                numAutos = agregarauto(autos, numAutos);
                 break;
+
             case 2:
                 listarAutos();
                 break;
+
             case 3:
                 listarAutosSegunCondicion();
                 break;
+
             case 4:
-            case 5:
-                printf("Funcionalidad en desarrollo.\n");
+                autobuscar();
                 break;
+
+            case 5:
+                listardisponibilidad();
+                break;
+
             case 6:
                 printf("Saliendo del programa.\n");
                 break;
-            default:
-                printf("Opcion incorrecta.\n");
+
+                default:
+    printf("Opcion invalida. Ingrese una opcion del 1 al 6.\n");
+    break;
         }
+        
 
     } while (opcion != 6);
 
