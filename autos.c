@@ -108,7 +108,7 @@ void listarAutos() {
         printf("\nMarca: %s\n", autoLeido.marca);
         printf("Modelo: %s\n", autoLeido.modelo);
         printf("Tipo: %c\n", autoLeido.tipo);
-        printf("Año: %d\n", autoLeido.ano);
+        printf("Ano: %d\n", autoLeido.ano);
         printf("Precio: %.2f\n", autoLeido.precio);
         
         if (autoLeido.disponible) {
@@ -127,7 +127,7 @@ void listarAutos() {
     fclose(archivo);
 }
 
-void listarautosseguncondicion() {
+void listarAutosSegunCondicion() {
     int opcion = 0;
 
     do {
@@ -162,7 +162,7 @@ void listarautosseguncondicion() {
                                       &autoLeido.precio, &disponible) == 6) {
                             
                             if (strcmp(autoLeido.marca, marcaBuscada) == 0) {
-                                printf("\n[Encontrado] Marca: %s | Modelo: %s | Año: %d | Precio: %.2f\n",
+                                printf("\n[Encontrado] Marca: %s | Modelo: %s | Ano: %d | Precio: %.2f\n",
                                        autoLeido.marca, autoLeido.modelo, autoLeido.ano, autoLeido.precio);
                                 cantidad++;
                             }
@@ -175,7 +175,7 @@ void listarautosseguncondicion() {
                                       &autoLeido.tipo, &autoLeido.ano,
                                       &autoLeido.precio, &disponible) == 6) {
                             if (autoLeido.ano >= 1800 && autoLeido.ano <= 1900) {
-                                printf("\n[1800-1900] Marca: %s | Modelo: %s | Año: %d\n",
+                                printf("\n[1800-1900] Marca: %s | Modelo: %s | Ano: %d\n",
                                        autoLeido.marca, autoLeido.modelo, autoLeido.ano);
                                 cantidad++;
                             }
@@ -188,7 +188,7 @@ void listarautosseguncondicion() {
                                       &autoLeido.tipo, &autoLeido.ano,
                                       &autoLeido.precio, &disponible) == 6) {
                             if (autoLeido.ano >= 1901 && autoLeido.ano <= 2000) {
-                                printf("\n[1901-2000] Marca: %s | Modelo: %s | Año: %d\n",
+                                printf("\n[1901-2000] Marca: %s | Modelo: %s | Ano: %d\n",
                                        autoLeido.marca, autoLeido.modelo, autoLeido.ano);
                                 cantidad++;
                             }
@@ -201,7 +201,7 @@ void listarautosseguncondicion() {
                                       &autoLeido.tipo, &autoLeido.ano,
                                       &autoLeido.precio, &disponible) == 6) {
                             if (autoLeido.ano >= 2001 && autoLeido.ano <= 2026) {
-                                printf("\n[2001-2026] Marca: %s | Modelo: %s | Año: %d\n",
+                                printf("\n[2001-2026] Marca: %s | Modelo: %s | Ano: %d\n",
                                        autoLeido.marca, autoLeido.modelo, autoLeido.ano);
                                 cantidad++;
                             }
@@ -214,7 +214,7 @@ void listarautosseguncondicion() {
                                       &autoLeido.tipo, &autoLeido.ano,
                                       &autoLeido.precio, &disponible) == 6) {
                             if (disponible == 1) {
-                                printf("\n[Disponible] Marca: %s | Modelo: %s | Año: %d\n",
+                                printf("\n[Disponible] Marca: %s | Modelo: %s | Ano: %d\n",
                                        autoLeido.marca, autoLeido.modelo, autoLeido.ano);
                                 cantidad++;
                             }
@@ -237,7 +237,44 @@ void listarautosseguncondicion() {
 
     } while (opcion != 6);
 }
+void autobuscar() {
+    printf("Ingrese la marca del auto a buscar: ");
+    char marcaBuscada[30];
+    scanf("%29s", marcaBuscada);
 
+    FILE *archivo = fopen("datos.txt", "r");
+    if (archivo == NULL) {
+        printf("No se pudo abrir datos.txt.\n");
+    } else {
+        Auto autoLeido;
+        int disponible;
+        int cantidad = 0;
+
+        while (fscanf(archivo, "%29s %29s %c %d %f %d",
+                      autoLeido.marca,
+                      autoLeido.modelo,
+                      &autoLeido.tipo,
+                      &autoLeido.ano,
+                      &autoLeido.precio,
+                      &disponible) == 6) {
+            if (strcmp(autoLeido.marca, marcaBuscada) == 0) {
+                printf("\nMarca: %s\n", autoLeido.marca);
+                printf("Modelo: %s\n", autoLeido.modelo);
+                printf("Tipo: %c\n", autoLeido.tipo);
+                printf("Ano: %d\n", autoLeido.ano);
+                printf("Precio: %.2f\n", autoLeido.precio);
+                printf("Disponible: %s\n", disponible == 1 ? "Si" : "No");
+                cantidad++;
+            }
+        }
+
+        if (cantidad == 0) {
+            printf("No se encontraron autos de la marca %s.\n", marcaBuscada);
+        }
+
+        fclose(archivo);
+    }
+}
 int menu() {
     int opcion;
     printf("\n--- MENU PRINCIPAL ---\n");
@@ -266,7 +303,7 @@ int main() {
                 listarAutos();
                 break;
             case 3:
-                listarautosseguncondicion();
+                listarAutosSegunCondicion();
                 break;
             case 4:
             case 5:
