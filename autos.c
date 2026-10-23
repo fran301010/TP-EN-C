@@ -275,6 +275,81 @@ void autobuscar() {
         fclose(archivo);
     }
 }
+void listardisponibilidad() {
+    FILE *archivo = fopen("datos.txt", "r");
+
+    if (archivo == NULL) {
+        printf("No se pudo abrir datos.txt.\n");
+    } else {
+        FILE *disponibles = fopen("disponibles.txt", "w");
+        FILE *noDisponibles = fopen("no-disponibles.txt", "w");
+
+        if (disponibles == NULL || noDisponibles == NULL) {
+            printf("No se pudieron crear los archivos de disponibilidad.\n");
+
+            if (disponibles != NULL) {
+                fclose(disponibles);
+            }
+
+            if (noDisponibles != NULL) {
+                fclose(noDisponibles);
+            }
+
+            fclose(archivo);
+        } else {
+            Auto autoLeido;
+            int disponible;
+            int cantidadDisponibles = 0;
+            int cantidadNoDisponibles = 0;
+
+            printf("\n--- AUTOS DISPONIBLES ---\n");
+
+            // Procesar y guardar disponibles / no disponibles
+            while (fscanf(archivo, "%29s %29s %c %d %f %d",
+                        autoLeido.marca,
+                        autoLeido.modelo,
+                        &autoLeido.tipo,
+                        &autoLeido.ano,
+                        &autoLeido.precio,
+                        &disponible) == 6) {
+
+                if (disponible == 1) {
+                    cantidadDisponibles++;
+
+                    fprintf(disponibles, "%s %s %c %d %.2f %d\n",
+                            autoLeido.marca,
+                            autoLeido.modelo,
+                            autoLeido.tipo,
+                            autoLeido.ano,
+                            autoLeido.precio,
+                            disponible);
+
+                    printf("Marca: %s | Modelo: %s | Tipo: %c | Ano: %d | Precio: %.2f | Disponible: Si\n",
+                           autoLeido.marca,
+                           autoLeido.modelo,
+                           autoLeido.tipo,
+                           autoLeido.ano,
+                           autoLeido.precio);
+
+                } else {
+                    cantidadNoDisponibles++;
+
+                    fprintf(noDisponibles, "%s %s %c %d %.2f %d\n",
+                            autoLeido.marca,
+                            autoLeido.modelo,
+                            autoLeido.tipo,
+                            autoLeido.ano,
+                            autoLeido.precio,
+                            disponible);
+                }
+            }
+
+            fclose(archivo);
+
+         
+        }
+    }
+}
 int menu() {
     int opcion;
     printf("\n--- MENU PRINCIPAL ---\n");
