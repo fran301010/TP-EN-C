@@ -169,6 +169,58 @@ void listarAutosSegunCondicion() {
                         }
                         break;
                     }
+                    case 2: {
+                        while (fscanf(archivo, "%29s %29s %c %d %f %d",
+                                      autoLeido.marca, autoLeido.modelo,
+                                      &autoLeido.tipo, &autoLeido.ano,
+                                      &autoLeido.precio, &disponible) == 6) {
+                            if (autoLeido.ano >= 1800 && autoLeido.ano <= 1900) {
+                                printf("\n[1800-1900] Marca: %s | Modelo: %s | Ano: %d\n",
+                                       autoLeido.marca, autoLeido.modelo, autoLeido.ano);
+                                cantidad++;
+                            }
+                        }
+                        break;
+                    }
+                    case 3: {
+                        while (fscanf(archivo, "%29s %29s %c %d %f %d",
+                                      autoLeido.marca, autoLeido.modelo,
+                                      &autoLeido.tipo, &autoLeido.ano,
+                                      &autoLeido.precio, &disponible) == 6) {
+                            if (autoLeido.ano >= 1901 && autoLeido.ano <= 2000) {
+                                printf("\n[1901-2000] Marca: %s | Modelo: %s | Ano: %d\n",
+                                       autoLeido.marca, autoLeido.modelo, autoLeido.ano);
+                                cantidad++;
+                            }
+                        }
+                        break;
+                    }
+                    case 4: {
+                        while (fscanf(archivo, "%29s %29s %c %d %f %d",
+                                      autoLeido.marca, autoLeido.modelo,
+                                      &autoLeido.tipo, &autoLeido.ano,
+                                      &autoLeido.precio, &disponible) == 6) {
+                            if (autoLeido.ano >= 2001 && autoLeido.ano <= 2026) {
+                                printf("\n[2001-2026] Marca: %s | Modelo: %s | Ano: %d\n",
+                                       autoLeido.marca, autoLeido.modelo, autoLeido.ano);
+                                cantidad++;
+                            }
+                        }
+                        break;
+                    }
+                    case 5: {
+                        while (fscanf(archivo, "%29s %29s %c %d %f %d",
+                                      autoLeido.marca, autoLeido.modelo,
+                                      &autoLeido.tipo, &autoLeido.ano,
+                                      &autoLeido.precio, &disponible) == 6) {
+                            if (disponible == 1) {
+                                printf("\n[Disponible] Marca: %s | Modelo: %s | Ano: %d\n",
+                                       autoLeido.marca, autoLeido.modelo, autoLeido.ano);
+                                cantidad++;
+                            }
+                        }
+                        break;
+                    }
                 }
 
                 if (cantidad == 0) {
