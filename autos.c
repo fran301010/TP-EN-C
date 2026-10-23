@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 typedef struct {
     char marca[30];
     char modelo[30];
     char tipo;
-    int año;
+    int ano;
     float precio;
     bool disponible;
 } Auto;
@@ -30,12 +31,12 @@ void agregarAuto(Auto autos[], int *numAutos) {
     scanf(" %c", &nuevoAuto.tipo);
 
     do {
-        printf("Ingrese el año (mayor a 1885): ");
-        scanf("%d", &nuevoAuto.año);
-        if (nuevoAuto.año <= 1885) {
-            printf("Error: Año invalido. Ingrese un año posterior a 1885.\n");
+        printf("Ingrese el ano (mayor a 1885): ");
+        scanf("%d", &nuevoAuto.ano);
+        if (nuevoAuto.ano <= 1885) {
+            printf("Error: Ano invalido. Ingrese un ano posterior a 1885.\n");
         }
-    } while (nuevoAuto.año <= 1885);
+    } while (nuevoAuto.ano <= 1885);
 
     do {
         printf("Ingrese el precio (mayor a 0): ");
@@ -70,7 +71,7 @@ void agregarAuto(Auto autos[], int *numAutos) {
             nuevoAuto.marca,
             nuevoAuto.modelo,
             nuevoAuto.tipo,
-            nuevoAuto.año,
+            nuevoAuto.ano,
             nuevoAuto.precio,
             nuevoAuto.disponible);
 
@@ -98,20 +99,16 @@ void listarAutos() {
                   autoLeido.marca,
                   autoLeido.modelo,
                   &autoLeido.tipo,
-                  &autoLeido.año,
+                  &autoLeido.ano,
                   &autoLeido.precio,
                   &disponible) == 6) {
 
-        if (disponible == 1) {
-            autoLeido.disponible = true;
-        } else {
-            autoLeido.disponible = false;
-        }
+        autoLeido.disponible = (disponible == 1);
 
         printf("\nMarca: %s\n", autoLeido.marca);
         printf("Modelo: %s\n", autoLeido.modelo);
         printf("Tipo: %c\n", autoLeido.tipo);
-        printf("Año: %d\n", autoLeido.año);
+        printf("Ano: %d\n", autoLeido.ano);
         printf("Precio: %.2f\n", autoLeido.precio);
         
         if (autoLeido.disponible) {
@@ -129,9 +126,69 @@ void listarAutos() {
 
     fclose(archivo);
 }
+
+void listarAutosSegunCondicion() {
+    int opcion = 0;
+
+    do {
+        printf("\n--- SELECCIONE UNA CONDICION ---\n");
+        printf("1. Listar autos de una marca especifica\n");
+        printf("2. Listar autos de 1800 A 1900\n");
+        printf("3. Listar autos de 1901 A 2000\n");
+        printf("4. Listar autos de 2001 A 2026\n");
+        printf("5. Listar autos disponibles\n");
+        printf("6. Volver al menu principal\n");
+        printf("Ingrese una opcion: ");
+        scanf("%d", &opcion);
+
+        if (opcion >= 1 && opcion <= 5) {
+            FILE *archivo = fopen("datos.txt", "r");
+            if (archivo == NULL) {
+                printf("No se pudo abrir el archivo (puede que aun no haya registros).\n");
+            } else {
+                Auto autoLeido;
+                int disponible;
+                int cantidad = 0;
+
+                switch (opcion) {
+                    case 1: {
+                        char marcaBuscada[30];
+                        printf("Ingrese la marca a buscar: ");
+                        scanf("%29s", marcaBuscada);
+
+                        while (fscanf(archivo, "%29s %29s %c %d %f %d",
+                                      autoLeido.marca, autoLeido.modelo,
+                                      &autoLeido.tipo, &autoLeido.ano,
+                                      &autoLeido.precio, &disponible) == 6) {
+                            
+                            if (strcmp(autoLeido.marca, marcaBuscada) == 0) {
+                                printf("\n[Encontrado] Marca: %s | Modelo: %s | Ano: %d | Precio: %.2f\n",
+                                       autoLeido.marca, autoLeido.modelo, autoLeido.ano, autoLeido.precio);
+                                cantidad++;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                if (cantidad == 0) {
+                    printf("\nNo se encontraron autos que cumplan con esa condicion.\n");
+                }
+
+                fclose(archivo);
+            }
+        } else {
+            if (opcion != 6) {
+                printf("Opcion invalida.\n");
+            }
+        }
+
+    } while (opcion != 6);
+}
+
 int menu() {
     int opcion;
-    printf("\nMENUUU\n");
+    printf("\n--- MENU PRINCIPAL ---\n");
     printf("1. Agregar auto\n");
     printf("2. Listar todos los autos\n");
     printf("3. Listar autos segun una condicion\n");
@@ -139,7 +196,6 @@ int menu() {
     printf("5. Separar autos segun disponibilidad\n");
     printf("6. Salir\n");
     printf("Ingrese una opcion: ");
-
     scanf("%d", &opcion);
     return opcion;
 }
@@ -147,8 +203,7 @@ int menu() {
 int main() {
     Auto autos[100];
     int numAutos = 0;
-    int opcion;
-    
+    int opcion; 
     do {
         opcion = menu();
         switch (opcion) {
@@ -159,12 +214,15 @@ int main() {
                 listarAutos();
                 break;
             case 3:
+                listarAutosSegunCondicion();
+                break;
             case 4:
             case 5:
+                printf("Funcionalidad en desarrollo.\n");
+                break;
             case 6:
                 printf("Saliendo del programa.\n");
                 break;
-
             default:
                 printf("Opcion incorrecta.\n");
         }
