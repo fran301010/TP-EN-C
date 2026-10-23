@@ -452,15 +452,30 @@ void listardisponibilidad() {
 }
 int menu() {
     int opcion;
-    printf("\n--- MENU PRINCIPAL ---\n");
-    printf("1. Agregar auto\n");
-    printf("2. Listar todos los autos\n");
-    printf("3. Listar autos segun una condicion\n");
-    printf("4. Buscar un auto\n");
-    printf("5. Separar autos segun disponibilidad\n");
-    printf("6. Salir\n");
-    printf("Ingrese una opcion: ");
-    scanf("%d", &opcion);
+    int resultado;
+
+    do {
+        printf("\n--- MENU PRINCIPAL ---\n");
+        printf("1. Agregar auto\n");
+        printf("2. Listar todos los autos\n");
+        printf("3. Listar autos segun una condicion\n");
+        printf("4. Buscar un auto\n");
+        printf("5. Separar autos segun disponibilidad\n");
+        printf("6. Salir\n");
+        printf("Ingrese una opcion: ");
+
+        resultado = scanf("%d", &opcion);
+
+        if (resultado != 1) {
+            printf("Error: debe ingresar un numero.\n");
+            fflush(stdin);
+            opcion = 0;
+        } else if (opcion < 1 || opcion > 6) {
+            printf("Opcion incorrecta. Ingrese un numero del 1 al 6.\n");
+        }
+
+    } while (opcion < 1 || opcion > 6);
+
     return opcion;
 }
 
